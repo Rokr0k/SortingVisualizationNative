@@ -1,5 +1,6 @@
 #include <random>
 #include <thread>
+#include <cstdio>
 #include <GLFW/glfw3.h>
 #include "algorithms.h"
 
@@ -9,6 +10,7 @@ void update(long long delta);
 SortVisualizerTool svt(128);
 
 void KeyFunc(GLFWwindow* window, int key, int scancode, int action, int mode);
+void ScrollFunc(GLFWwindow* window, double xoffset, double yoffset);
 
 bool running = true;
 int drawMode = 0;
@@ -29,6 +31,7 @@ int main()
 	glfwMakeContextCurrent(window);
 	glfwSwapInterval(1);
 	glfwSetKeyCallback(window, KeyFunc);
+	glfwSetScrollCallback(window, ScrollFunc);
 
 	glClearColor(0, 0, 0, 0);
 
@@ -153,6 +156,7 @@ long long interval = 5000000;
 
 void update(long long delta)
 {
+	printf("\rDelay : %lf ms", interval / 1000000.0);
 	while (delta>0)
 	{
 		if (svt.nextAction())
@@ -233,4 +237,10 @@ void KeyFunc(GLFWwindow* window, int key, int scancode, int action, int mode)
 			}
 		}
 	}
+}
+
+void ScrollFunc(GLFWwindow* window, double xoffset, double yoffset)
+{
+	interval = std::max(10000LL, interval + (long long)(yoffset * 10000));
+	printf("\rDelay : %lf ms", interval / 1000000.0);
 }
