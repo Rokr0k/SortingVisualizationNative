@@ -11,6 +11,7 @@ Powered by OpenGL with GLFW
 3: 512 items  
 4: 1024 items  
 5: 2048 items  
+tab: Change view mode  
 b: Bubble sort  
 s: Selection sort  
 shift + s: Shell sort  

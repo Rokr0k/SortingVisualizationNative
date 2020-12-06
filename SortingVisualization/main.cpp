@@ -1,11 +1,15 @@
 #include <random>
 #include <thread>
 #include <cstdio>
+#include <functional>
+#include <GL/glew.h>
 #include <GLFW/glfw3.h>
 #include "algorithms.h"
 
 void render();
 void update(long long delta);
+
+void setTitle(GLFWwindow* window);
 
 SortVisualizerTool svt(128);
 
@@ -21,7 +25,7 @@ int main()
 	if (!glfwInit())
 		return -1;
 
-	window = glfwCreateWindow(1280, 720, "SortingVisualizer", NULL, NULL);
+	window = glfwCreateWindow(1280, 720, "SortingVisualizer [Interval: 5.00 ms, ItemsSize: 128]", NULL, NULL);
 	if (!window)
 	{
 		glfwTerminate();
@@ -156,7 +160,6 @@ long long interval = 5000000;
 
 void update(long long delta)
 {
-	printf("\rDelay : %lf ms", interval / 1000000.0);
 	while (delta>0)
 	{
 		if (svt.nextAction())
@@ -178,31 +181,38 @@ void KeyFunc(GLFWwindow* window, int key, int scancode, int action, int mode)
 		else if (key == GLFW_KEY_1)
 		{
 			svt.reset(128);
+			setTitle(window);
 		}
 		else if (key == GLFW_KEY_2)
 		{
 			svt.reset(256);
+			setTitle(window);
 		}
 		else if (key == GLFW_KEY_3)
 		{
 			svt.reset(512);
+			setTitle(window);
 		}
 		else if (key == GLFW_KEY_4)
 		{
 			svt.reset(1024);
+			setTitle(window);
 		}
 		else if (key == GLFW_KEY_5)
 		{
 			svt.reset(2048);
+			setTitle(window);
 		}
 		else if (!svt.nextAction())
 		{
 			if (key == GLFW_KEY_SPACE)
 			{
 				std::default_random_engine generator;
+				generator.seed(time(NULL));
 				std::uniform_int_distribution<int> distribution(0, svt.size - 1);
+				auto random = std::bind(distribution, generator);
 				for (int i = 0; i < svt.size; i++)
-					svt.actSwap(i, distribution(generator));
+					svt.actSwap(i, random());
 			}
 			else if (key == GLFW_KEY_B)
 			{
@@ -242,5 +252,12 @@ void KeyFunc(GLFWwindow* window, int key, int scancode, int action, int mode)
 void ScrollFunc(GLFWwindow* window, double xoffset, double yoffset)
 {
 	interval = std::max(10000LL, interval + (long long)(yoffset * 10000));
-	printf("\rDelay : %lf ms", interval / 1000000.0);
+	setTitle(window);
+}
+
+void setTitle(GLFWwindow* window)
+{
+	char buffer[100] = { 0 };
+	sprintf(buffer, "SortingVisualizer [Interval: %.2lf ms, ItemsSize: %d]", interval / 1000000.0, svt.size);
+	glfwSetWindowTitle(window, buffer);
 }
