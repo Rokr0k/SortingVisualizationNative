@@ -1,7 +1,6 @@
-#include <random>
-#include <thread>
+#include <chrono>
 #include <cstdio>
-#include <functional>
+#include <random>
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 #include "algorithms.h"
@@ -208,11 +207,10 @@ void KeyFunc(GLFWwindow* window, int key, int scancode, int action, int mode)
 			if (key == GLFW_KEY_SPACE)
 			{
 				std::default_random_engine generator;
-				generator.seed(time(NULL));
+				generator.seed((unsigned int)time(NULL));
 				std::uniform_int_distribution<int> distribution(0, svt.size - 1);
-				auto random = std::bind(distribution, generator);
 				for (int i = 0; i < svt.size; i++)
-					svt.actSwap(i, random());
+					svt.actSwap(i, distribution(generator));
 			}
 			else if (key == GLFW_KEY_B)
 			{
@@ -251,13 +249,13 @@ void KeyFunc(GLFWwindow* window, int key, int scancode, int action, int mode)
 
 void ScrollFunc(GLFWwindow* window, double xoffset, double yoffset)
 {
-	interval = std::max(10000LL, interval + (long long)(yoffset * 10000));
+	interval = std::max(50000LL, interval + (long long)(yoffset * 50000));
 	setTitle(window);
 }
 
 void setTitle(GLFWwindow* window)
 {
 	char buffer[100] = { 0 };
-	sprintf(buffer, "SortingVisualizer [Interval: %.2lf ms, ItemsSize: %d]", interval / 1000000.0, svt.size);
+	sprintf_s(buffer, sizeof(char)*100, "SortingVisualizer [Interval: %.2lf ms, ItemsSize: %d]", interval / 1000000.0, svt.size);
 	glfwSetWindowTitle(window, buffer);
 }

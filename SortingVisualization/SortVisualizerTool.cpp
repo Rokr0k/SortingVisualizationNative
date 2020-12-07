@@ -1,5 +1,4 @@
 #include "SortVisualizerTool.h"
-#include <math.h>
 
 int& SortVisualizerTool::operator[](const int index)
 {

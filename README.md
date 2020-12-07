@@ -21,3 +21,8 @@ q: Quick sort
 h: Heap sort  
 scroll up: Increase interval  
 scroll down: Decrease interval  
+
+
+### Warning
+
+Release Configuration x64 doesn't work for no reason. Use Debug Configuration x64 instead.
