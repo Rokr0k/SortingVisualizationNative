@@ -8,3 +8,4 @@ void MergeSort(SortVisualizerTool& svt);
 void QuickSort(SortVisualizerTool& svt);
 void HeapSort(SortVisualizerTool& svt);
 void RadixSort(SortVisualizerTool& svt, const int base);
+void CocktailShakerSort(SortVisualizerTool& svt);
