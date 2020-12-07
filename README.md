@@ -19,6 +19,8 @@ i: Insertion sort
 m: Merge sort  
 q: Quick sort  
 h: Heap sort  
+r: Radix sort (base 10)  
+shift + s: Radix sort (base 4)  
 scroll up: Increase interval  
 scroll down: Decrease interval  
 

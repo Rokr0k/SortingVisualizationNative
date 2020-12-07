@@ -243,6 +243,17 @@ void KeyFunc(GLFWwindow* window, int key, int scancode, int action, int mode)
 			{
 				HeapSort(svt);
 			}
+			else if (key == GLFW_KEY_R)
+			{
+				if (mode & GLFW_MOD_SHIFT)
+				{
+					RadixSort(svt, 4);
+				}
+				else
+				{
+					RadixSort(svt, 10);
+				}
+			}
 		}
 	}
 }

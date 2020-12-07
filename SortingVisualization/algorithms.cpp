@@ -112,3 +112,33 @@ void HeapSort(SortVisualizerTool& svt)
 		heap(svt, 0, i);
 	}
 }
+void RadixSort(SortVisualizerTool& svt, const int base)
+{
+	int max = svt.size - 1, len = 1;
+	while (max)
+	{
+		max /= base;
+		len *= base;
+	}
+	int* bck = new int[base];
+	int* arr = new int[svt.size];
+	int* rdx = new int[svt.size];
+	for (int i = 1; i < len; i *= base)
+	{
+		for (int j = 0; j < base; j++)
+			bck[j] = 0;
+		for (int j = 0; j < svt.size; j++)
+		{
+			arr[j] = svt.actGet(j);
+			rdx[j] = arr[j] / i % base;
+			bck[rdx[j]]++;
+		}
+		for (int j = 0; j < base - 1; j++)
+			bck[j + 1] += bck[j];
+		for (int j = svt.size - 1; j >= 0; j--)
+			svt.actSet(--bck[rdx[j]], arr[j]);
+	}
+	delete[] bck;
+	delete[] arr;
+	delete[] rdx;
+}
