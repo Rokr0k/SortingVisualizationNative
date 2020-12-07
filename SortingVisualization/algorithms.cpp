@@ -4,9 +4,17 @@
 void BubbleSort(SortVisualizerTool& svt)
 {
 	for (int i = 0; i < svt.size - 1; i++)
+	{
+		bool swapped = false;
 		for (int j = 0; j < svt.size - i - 1; j++)
 			if (svt.actCompare(j + 1, j))
+			{
 				svt.actSwap(j, j + 1);
+				swapped = true;
+			}
+		if (!swapped)
+			break;
+	}
 }
 void SelectionSort(SortVisualizerTool& svt)
 {
@@ -110,5 +118,63 @@ void HeapSort(SortVisualizerTool& svt)
 	{
 		svt.actSwap(0, i);
 		heap(svt, 0, i);
+	}
+}
+void RadixSort(SortVisualizerTool& svt, const int base)
+{
+	int max = svt.size - 1, len = 1;
+	while (max)
+	{
+		max /= base;
+		len *= base;
+	}
+	int* bck = new int[base];
+	int* arr = new int[svt.size];
+	int* rdx = new int[svt.size];
+	for (int i = 1; i < len; i *= base)
+	{
+		for (int j = 0; j < base; j++)
+			bck[j] = 0;
+		for (int j = 0; j < svt.size; j++)
+		{
+			arr[j] = svt.actGet(j);
+			svt.pushAction({ SortVisualizerTool::ActionType::COMPARE, j, -1 });
+			rdx[j] = arr[j] / i % base;
+			bck[rdx[j]]++;
+		}
+		for (int j = 0; j < base - 1; j++)
+			bck[j + 1] += bck[j];
+		for (int j = svt.size - 1; j >= 0; j--)
+			svt.actSet(--bck[rdx[j]], arr[j]);
+	}
+	delete[] bck;
+	delete[] arr;
+	delete[] rdx;
+}
+void CocktailShakerSort(SortVisualizerTool& svt)
+{
+	bool swapped = true;
+	int left = 0;
+	int right = svt.size - 1;
+	while (swapped)
+	{
+		swapped = false;
+		for(int i=left; i<right; i++)
+			if (svt.actCompare(i + 1, i))
+			{
+				svt.actSwap(i, i + 1);
+				swapped = true;
+			}
+		right--;
+		if (!swapped)
+			break;
+		swapped = false;
+		for (int i = right; i >left; i--)
+			if (svt.actCompare(i, i-1))
+			{
+				svt.actSwap(i - 1, i);
+				swapped = true;
+			}
+		left++;
 	}
 }

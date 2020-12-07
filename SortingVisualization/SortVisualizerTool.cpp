@@ -35,7 +35,7 @@ SortVisualizerTool::Action SortVisualizerTool::getAction()
 {
 	if (this->nextAction())
 		return this->actions.front();
-	return { 0, -1, -1 };
+	return { SortVisualizerTool::ActionType::NONE, -1, -1 };
 }
 
 bool SortVisualizerTool::nextAction()
@@ -45,13 +45,13 @@ bool SortVisualizerTool::nextAction()
 
 int SortVisualizerTool::actCompare(int i, int j)
 {
-	this->actions.push({ 1, i, j });
+	this->actions.push({ SortVisualizerTool::ActionType::COMPARE, i, j });
 	return this->bgArr[i] < this->bgArr[j];
 }
 
 void SortVisualizerTool::actSwap(int i, int j)
 {
-	this->actions.push({ 2, i, j });
+	this->actions.push({ SortVisualizerTool::ActionType::SWAP, i, j });
 	int tmp = this->bgArr[i];
 	this->bgArr[i] = this->bgArr[j];
 	this->bgArr[j] = tmp;
@@ -59,7 +59,7 @@ void SortVisualizerTool::actSwap(int i, int j)
 
 void SortVisualizerTool::actSet(int i, int v)
 {
-	this->actions.push({ 3, i, -1, v });
+	this->actions.push({ SortVisualizerTool::ActionType::SET, i, -1, v });
 	this->bgArr[i]  = v;
 }
 
@@ -68,24 +68,29 @@ int SortVisualizerTool::actGet(int i)
 	return this->bgArr[i];
 }
 
+void SortVisualizerTool::pushAction(Action action)
+{
+	this->actions.push(action);
+}
+
 void SortVisualizerTool::popAction()
 {
 	if (this->nextAction())
 	{
 		SortVisualizerTool::Action action = this->getAction();
-		if (action.type)
+		if (action.type != SortVisualizerTool::ActionType::NONE)
 		{
 			this->actions.pop();
 			switch (action.type)
 			{
-			case 2:
+			case SortVisualizerTool::ActionType::SWAP:
 			{
 				int tmp = this->operator[](action.a);
 				this->operator[](action.a) = this->operator[](action.b);
 				this->operator[](action.b) = tmp;
 			}
 				break;
-			case 3:
+			case SortVisualizerTool::ActionType::SET:
 				this->operator[](action.a) = action.v;
 				break;
 			}

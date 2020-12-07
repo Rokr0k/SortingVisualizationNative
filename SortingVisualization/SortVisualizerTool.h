@@ -4,9 +4,15 @@
 class SortVisualizerTool
 {
 public:
+	enum class ActionType
+	{
+		NONE, COMPARE, SWAP, SET
+	};
+
 	struct Action
 	{
-		int type, a, b;
+		ActionType type;
+		int a, b;
 		int v = 0;
 	};
 
@@ -25,6 +31,7 @@ public:
 	void actSwap(int i, int j);
 	void actSet(int i, int v);
 	int actGet(int i);
+	void pushAction(Action action);
 	void popAction();
 	void reset(int size);
 
