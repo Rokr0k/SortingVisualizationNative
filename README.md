@@ -2,7 +2,7 @@
 
 You can see how computer sort in different ways with this program.
 
-Powered by OpenGL with GLFW
+Powered by OpenGL with GLFW, GLEW
 
 ## How to use
 
