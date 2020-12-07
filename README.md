@@ -6,13 +6,13 @@ Powered by OpenGL with GLFW, GLEW
 
 ## How to use
 
-1: 64 items
+1: 64 items  
 2: 128 items  
 3: 256 items  
 4: 512 items  
 5: 1024 items  
 6: 2048 items  
-shift + 1: 50 items
+shift + 1: 50 items  
 shift + 2: 100 items  
 shift + 3: 250 items  
 shift + 4: 500 items  
