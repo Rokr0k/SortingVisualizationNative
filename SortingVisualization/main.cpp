@@ -1,6 +1,7 @@
 #include <chrono>
 #include <cstdio>
 #include <random>
+#include <thread>
 #include <Windows.h>
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
@@ -238,49 +239,59 @@ void KeyFunc(GLFWwindow* window, int key, int scancode, int action, int mod)
 			}
 			else if (key == GLFW_KEY_B)
 			{
-				BubbleSort(svt);
+				std::thread t([]() {BubbleSort(svt); });
+				t.detach();
 			}
 			else if (key == GLFW_KEY_S)
 			{
 				if (mod & GLFW_MOD_SHIFT)
 				{
-					ShellSort(svt);
+					std::thread t([]() {ShellSort(svt); });
+					t.detach();
 				}
 				else
 				{
-					SelectionSort(svt);
+					std::thread t([]() {SelectionSort(svt); });
+					t.detach();
 				}
 			}
 			else if (key == GLFW_KEY_I)
 			{
-				InsertionSort(svt);
+				std::thread t([]() {InsertionSort(svt); });
+				t.detach();
 			}
 			else if (key == GLFW_KEY_M)
 			{
-				MergeSort(svt);
+				std::thread t([]() {MergeSort(svt); });
+				t.detach();
 			}
 			else if (key == GLFW_KEY_Q)
 			{
-				QuickSort(svt);
+				std::thread t([]() {QuickSort(svt); });
+				t.detach();
 			}
 			else if (key == GLFW_KEY_H)
 			{
-				HeapSort(svt);
+				std::thread t([]() {HeapSort(svt); });
+				t.detach();
 			}
 			else if (key == GLFW_KEY_R)
 			{
 				if (mod & GLFW_MOD_SHIFT)
 				{
-					RadixSort(svt, 4);
+					std::thread t([]() {RadixSort(svt, 4); });
+					t.detach();
 				}
 				else
 				{
-					RadixSort(svt, 10);
+					std::thread t([]() {RadixSort(svt, 10); });
+					t.detach();
 				}
 			}
 			else if (key == GLFW_KEY_C)
 			{
-				CocktailShakerSort(svt);
+				std::thread t([]() {CocktailShakerSort(svt); });
+				t.detach();
 			}
 		}
 	}

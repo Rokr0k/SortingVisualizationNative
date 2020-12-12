@@ -1,5 +1,6 @@
 #pragma once
 #include <queue>
+#include <mutex>
 
 class SortVisualizerTool
 {
@@ -17,6 +18,7 @@ public:
 	};
 
 	int size;
+	std::mutex m;
 
 	int& operator[](const int index);
 

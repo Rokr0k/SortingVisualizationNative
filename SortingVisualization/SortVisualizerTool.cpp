@@ -34,24 +34,36 @@ float SortVisualizerTool::getRadius(int index)
 SortVisualizerTool::Action SortVisualizerTool::getAction()
 {
 	if (this->nextAction())
-		return this->actions.front();
+	{
+		this->m.lock();
+		auto r = this->actions.front();
+		this->m.unlock();
+		return r;
+	}
 	return { SortVisualizerTool::ActionType::NONE, -1, -1 };
 }
 
 bool SortVisualizerTool::nextAction()
 {
-	return !this->actions.empty();
+	this->m.lock();
+	auto r = this->actions.empty();
+	this->m.unlock();
+	return !r;
 }
 
 int SortVisualizerTool::actCompare(int i, int j)
 {
+	this->m.lock();
 	this->actions.push({ SortVisualizerTool::ActionType::COMPARE, i, j });
+	this->m.unlock();
 	return this->bgArr[i] < this->bgArr[j];
 }
 
 void SortVisualizerTool::actSwap(int i, int j)
 {
+	this->m.lock();
 	this->actions.push({ SortVisualizerTool::ActionType::SWAP, i, j });
+	this->m.unlock();
 	int tmp = this->bgArr[i];
 	this->bgArr[i] = this->bgArr[j];
 	this->bgArr[j] = tmp;
@@ -59,7 +71,9 @@ void SortVisualizerTool::actSwap(int i, int j)
 
 void SortVisualizerTool::actSet(int i, int v)
 {
+	this->m.lock();
 	this->actions.push({ SortVisualizerTool::ActionType::SET, i, -1, v });
+	this->m.unlock();
 	this->bgArr[i]  = v;
 }
 
@@ -70,7 +84,9 @@ int SortVisualizerTool::actGet(int i)
 
 void SortVisualizerTool::pushAction(Action action)
 {
+	this->m.lock();
 	this->actions.push(action);
+	this->m.unlock();
 }
 
 void SortVisualizerTool::popAction()
@@ -80,7 +96,9 @@ void SortVisualizerTool::popAction()
 		SortVisualizerTool::Action action = this->getAction();
 		if (action.type != SortVisualizerTool::ActionType::NONE)
 		{
+			this->m.lock();
 			this->actions.pop();
+			this->m.unlock();
 			switch (action.type)
 			{
 			case SortVisualizerTool::ActionType::SWAP:
