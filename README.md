@@ -19,6 +19,8 @@ shift + 4: 500 items
 shift + 5: 1000 items  
 shift + 6: 2000 items  
 tab: Change view mode  
+backspace: Toggle automation mode or manual mode  
+enter: Next action if manual mode  
 b: Bubble sort  
 s: Selection sort  
 shift + s: Shell sort  

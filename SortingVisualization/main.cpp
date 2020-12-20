@@ -20,6 +20,8 @@ void ScrollFunc(GLFWwindow* window, double xoffset, double yoffset);
 bool running = true;
 int drawMode = 0;
 
+bool automatic = true;
+
 int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ LPSTR lpszCommandParam, _In_ int nCmdShow)
 {
 	GLFWwindow* window;
@@ -47,7 +49,10 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 		glClear(GL_COLOR_BUFFER_BIT);
 		p = s;
 		s = std::chrono::high_resolution_clock::now();
-		update(std::chrono::duration_cast<std::chrono::nanoseconds>(s-p).count());
+		if (automatic)
+		{
+			update(std::chrono::duration_cast<std::chrono::nanoseconds>(s - p).count());
+		}
 		render();
 		glfwSwapBuffers(window);
 		glfwPollEvents();
@@ -227,6 +232,15 @@ void KeyFunc(GLFWwindow* window, int key, int scancode, int action, int mod)
 				svt.reset(2048);
 			setTitle(window);
 		}
+		else if (key == GLFW_KEY_BACKSPACE)
+		{
+			automatic = !automatic;
+			setTitle(window);
+		}
+		else if (key == GLFW_KEY_ENTER && svt.nextAction())
+		{
+			svt.popAction();
+		}
 		else if (!svt.nextAction())
 		{
 			if (key == GLFW_KEY_SPACE)
@@ -306,6 +320,9 @@ void ScrollFunc(GLFWwindow* window, double xoffset, double yoffset)
 void setTitle(GLFWwindow* window)
 {
 	char buffer[100] = { 0 };
-	sprintf_s(buffer, sizeof(char)*100, "SortingVisualizer [Interval: %.2lf ms, ItemsSize: %d]", interval / 1000000.0, svt.size);
+	if(automatic)
+		sprintf_s(buffer, sizeof(char)*100, "SortingVisualizer [Interval: %.2lf ms, ItemsSize: %d]", interval / 1000000.0, svt.size);
+	else
+		sprintf_s(buffer, sizeof(char) * 100, "SortingVisualizer [Manual, ItemsSize: %d]", svt.size);
 	glfwSetWindowTitle(window, buffer);
 }
